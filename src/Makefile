@@ -15,12 +15,12 @@ CC_HOST?=gcc
 #  make clean && cp support/stripchoice-E1M1ONLY.txt support/stripchoice.txt && cp support/stripchoice-E1M1ONLY.txt support/stripchoicebegin.txt && EXTRA_CFLAGS="-DE1M1ONLY=1" make && ls -l emdoom
 # 
 
-CFLAGS?=-m32 -Os -g -w -flto -DNORMALUNIX -DLINUX -DMAXPLAYERS=1 -DRANGECHECK -DDISABLE_NETWORK -fdata-sections -ffunction-sections $(EXTRA_CFLAGS) # -DUSEASM 
+CFLAGS?=-m32 -Os -g -w -DNORMALUNIX -DLINUX -DMAXPLAYERS=1 -DRANGECHECK -DDISABLE_NETWORK -fdata-sections -ffunction-sections $(EXTRA_CFLAGS) # -DUSEASM 
 LDFLAGS?=-L/usr/X11R6/lib -Wl,--gc-sections $(CFLAGS)
-LIBS?=-lXext -lX11 -lnsl -lm -lpthread
+LIBS?=-lnsl -lm -lpthread
 CFLAGS_HOST?=-m32 -DNORMALUNIX -DLINUX $(EXTRA_CFLAGS)
 LDFLAGS_HOST?=-L/usr/X11R6/lib
-LIBS_HOST?=-lXext -lX11 -lnsl -lm -lpthread
+LIBS_HOST?=-lnsl -lm -lpthread
 CS?=i_video.c
 
 
@@ -111,11 +111,12 @@ CS+=				\
 		stubs.c    \
 		sounds.c	\
 		s_sound.c		\
-		i_sound.c
+		i_sound.c \
+		TermDriver.c
 
-all:	 emdoom
+all:	 emdoom 
 
-emdoom:	$(CS) i_main.c $(BAKED) $(SUPPORT_FILES) support/rawwad_use.o
+emdoom:	$(CS) i_main.c $(BAKED) $(SUPPORT_FILES) support/rawwad_use.o 
 	$(CC) $(CFLAGS_FINAL)  $^ -o emdoom $(LDFLAGS) $(LIBS)
 
 support/baked_texture_data.c support/baked_map_data.c bakedoutput.txt : emdoom.gentables.initial
