@@ -34,6 +34,8 @@
 #include <errno.h>
 #include <netinet/in.h>
 #include <signal.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
@@ -229,6 +231,8 @@ void I_StartFrame() {}
 
 void I_ShutdownGraphics(void) { exit(0); }
 
+static uint32_t buffer[256000] = {};
+
 void I_FinishUpdate(void) {
 
   static int lasttic;
@@ -236,28 +240,24 @@ void I_FinishUpdate(void) {
   int i;
   // UNUSED static unsigned char *bigscreen=0;
 
-#if 0
-    // draws little dots on the bottom of the screen
-    if (devparm)
-    {
-		i = I_GetTime();
-		tics = i - lasttic;
-		lasttic = i;
-		if (tics > 20) tics = 20;
+  // draws little dots on the bottom of the screen
+  i = I_GetTime();
+  tics = i - lasttic;
+  lasttic = i;
+  if (tics > 20)
+    tics = 20;
 
-		for (i=0 ; i<tics*2 ; i+=2)
-			screens[0][ (SCREENHEIGHT-1)*SCREENWIDTH + i] = 0xff;
-		for ( ; i<20*2 ; i+=2)
-			screens[0][ (SCREENHEIGHT-1)*SCREENWIDTH + i] = 0x0;	
-    }
-#endif
+  for (i = 0; i < tics * 2; i += 2)
+    screens[0][(SCREENHEIGHT - 1) * SCREENWIDTH + i] = 0xff;
+  for (; i < 20 * 2; i += 2)
+    screens[0][(SCREENHEIGHT - 1) * SCREENWIDTH + i] = 0x0;
 
   // This is for display on PC only.  Don't worry about the output staging
   // buffer being big!
 
   static uint32_t *bmdata;
   if (!bmdata)
-    bmdata = malloc(SCREENWIDTH * SCREENHEIGHT * OUTSCALE * OUTSCALE * 4);
+    bmdata = &buffer;
 
   int y, x;
   for (y = 0; y < SCREENHEIGHT; y++) {
