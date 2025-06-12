@@ -28,6 +28,7 @@
 
 #include "doomtype.h"
 #include "i_system.h"
+#include <stdint.h>
 
 #ifdef __GNUG__
 #pragma implementation "m_fixed.h"
@@ -50,18 +51,41 @@ fixed_t FixedDiv(fixed_t a, fixed_t b) {
   return FixedDiv2(a, b);
 }
 
+// pure vibe code, not implementing this shit...
+typedef uint32_t u32;
+
+/**
+ * FixedDiv2(a,b) = floor((a<<16)/b)
+ * computed in pure 32-bit.
+ */
 fixed_t FixedDiv2(fixed_t a, fixed_t b) {
-#if 0
-    long long c;
-    c = ((long long)a<<16) / ((long long)b);
-    return (fixed_t) c;
-#endif
+  if (b == 0) {
+    // divide by zero → saturate, or handle error as you like
+    return (a >= 0) ? INT32_MAX : INT32_MIN;
+  }
 
-  double c;
+  // --- 1) handle sign ---
+  int neg = ((a ^ b) < 0);
+  u32 ua = (a < 0) ? (u32)(-a) : (u32)a;
+  u32 ub = (b < 0) ? (u32)(-b) : (u32)b;
 
-  c = ((double)a) / ((double)b) * FRACUNIT;
+  // --- 2) integer quotient and remainder ---
+  u32 Q = ua / ub;
+  u32 R = ua % ub;
 
-  if (c >= 2147483648.0 || c < -2147483648.0)
-    I_Error("FixedDiv: divide by zero");
-  return (fixed_t)c;
+  // --- 3) build 16-bit fractional part by long division ---
+  u32 frac = 0;
+  for (int bit = 15; bit >= 0; --bit) {
+    R <<= 1;
+    if (R >= ub) {
+      R -= ub;
+      frac |= (1u << bit);
+    }
+  }
+
+  // --- 4) combine integer and fractional parts ---
+  //    (Q<<16) | frac = floor((a<<16)/b) for non-negatives
+  u32 result = (Q << 16) | frac;
+
+  return neg ? -(fixed_t)result : (fixed_t)result;
 }
