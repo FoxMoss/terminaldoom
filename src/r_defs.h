@@ -252,8 +252,6 @@ typedef struct {
 typedef post_t column_t;
 
 static column_t *cast_as_column(byte *ptr) {
-  printf("%lu size %02x, %02x, %02x, %02x\n", sizeof(column_t), ptr[0], ptr[1],
-         ptr[2], ptr[3]);
   column_t col;
   col.topdelta = ptr[0];
   col.length = ptr[1];

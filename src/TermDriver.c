@@ -35,6 +35,7 @@ void CNFGHandleInput() {
     key = '\0';
   }
 
+  printf("input required: \n");
   fcntl(0, F_SETFL, O_NONBLOCK); // TODO: replace with bash calls
   if (ngetc(&key) != 0) {
     HandleKey(key, 0);
@@ -57,24 +58,16 @@ uint32_t get_index(short x, short y) {
 }
 
 void CNFGUpdateScreenWithBitmap(unsigned long *data, int w, int h) {
-  size_t max_pixel_size = strlen("\x1b[38;2;255;255;255m█\x1b[0m");
-  size_t max_buffer_size = max_pixel_size * (w / 5) * (h / 10);
-  char write_buffer[max_pixel_size * w * h];
-  size_t cursor = 0;
   for (int y = 0; y < h; y += 10) {
     for (int x = 0; x < w; x += 5) {
       uint32_t base_color = data[x + y * w];
       unsigned char red = base_color & 0xFF; // red and blue channels swapped!!
       unsigned char grn = (base_color >> 8) & 0xFF;
       unsigned char blu = (base_color >> 16) & 0xFF;
-      cursor +=
-          snprintf((char *)&write_buffer + cursor, max_buffer_size - cursor,
-                   "\x1b[38;2;%i;%i;%im█\x1b[0m", blu, grn, red);
+      printf("\x1b[38;2;%i;%i;%im█\x1b[0m", blu, grn, red);
     }
-    cursor += snprintf((char *)&write_buffer + cursor, max_buffer_size - cursor,
-                       "\n");
+    printf("\n");
   }
-  puts(write_buffer);
 }
 
 static uint32_t saved_color = 0;

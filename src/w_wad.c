@@ -68,7 +68,7 @@ int filelength(int handle) { return sizeof(rawwad); }
 
 #define strcmpi strcasecmp
 
-void strupr(char *s) {
+void strupr2(char *s) {
   while (*s) {
     *s = toupper(*s);
     s++;
@@ -183,7 +183,7 @@ int W_CheckNumForName(char *name) {
   name8.s[8] = 0;
 
   // case insensitive
-  strupr(name8.s);
+  strupr2(name8.s);
 
   v1 = name8.x[0];
   v2 = name8.x[1];
@@ -269,22 +269,6 @@ const void *W_CacheLumpNum(int lump, int tag) {
 
   patch_t *patch = (patch_t *)&rawwad[lumpinfo[lump].position];
   char *patch_data = (char *)&rawwad[lumpinfo[lump].position];
-  printf("sizeof(patch) = %lu\n", sizeof(patch_t));
-  printf("patch dump cache %i: offset (%i, %i) scale (%i, %i) col %i\n",
-         lumpinfo[lump].position, patch->leftoffset, patch->topoffset,
-         patch->width, patch->height, patch->columnofs[0]);
-  printf("memory dump %02x %02x %02x %02x\n", patch_data[0], patch_data[1],
-         patch_data[2], patch_data[3]);
-  printf("memory dump %02x %02x %02x %02x\n", patch_data[4], patch_data[5],
-         patch_data[6], patch_data[7]);
-  printf("memory dump %02x %02x %02x %02x\n", patch_data[8], patch_data[9],
-         patch_data[6], patch_data[15]);
-  printf("memory dump %02x %02x %02x %02x\n", patch_data[12], patch_data[13],
-         patch_data[6], patch_data[23]);
-  printf("memory dump %02x %02x %02x %02x\n", patch_data[16], patch_data[17],
-         patch_data[6], patch_data[31]);
-  printf("memory dump %02x %02x %02x %02x\n", patch_data[20], patch_data[21],
-         patch_data[6], patch_data[39]);
   return &rawwad[lumpinfo[lump].position];
 
   /*	if (!lumpcache[lump])
