@@ -14,10 +14,9 @@ CC_HOST?=gcc
 # for E1M1 Only, 
 #  make clean && cp support/stripchoice-E1M1ONLY.txt support/stripchoice.txt && cp support/stripchoice-E1M1ONLY.txt support/stripchoicebegin.txt && EXTRA_CFLAGS="-DE1M1ONLY=1" make && ls -l emdoom
 # 
-
-CFLAGS?=-m32 -Os -g -w -DNORMALUNIX -DLINUX -DMAXPLAYERS=1 -DRANGECHECK -DDISABLE_NETWORK -fdata-sections -ffunction-sections $(EXTRA_CFLAGS) # -DUSEASM 
-LDFLAGS?=-L/usr/X11R6/lib -Wl,--gc-sections $(CFLAGS)
-LIBS?=-lnsl -lm -lpthread
+EXTRA_CFLAGS:= -Wno-int-conversion -w -Wno-implicit-int
+CFLAGS?=-m32 -Os -g -w -DNORMALUNIX -DLINUX -DMAXPLAYERS=1 -DRANGECHECK -DDISABLE_NETWORK -fdata-sections -ffunction-sections $(EXTRA_CFLAGS) 
+LDFLAGS?= -Wl,--gc-sections $(CFLAGS)
 CFLAGS_HOST?=-m32 -DNORMALUNIX -DLINUX $(EXTRA_CFLAGS)
 LDFLAGS_HOST?=-L/usr/X11R6/lib
 LIBS_HOST?=-lnsl -lm -lpthread

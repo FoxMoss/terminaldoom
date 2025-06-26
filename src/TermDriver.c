@@ -4,6 +4,7 @@
 #include "math.c"
 #include <fcntl.h>
 #include <math.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,6 +14,7 @@
 #define WIDTH 200
 #define HEIGHT 200
 static char global_window_name[256] = {};
+
 void CNFGGetDimensions(short *x, short *y) {
   *x = WIDTH;
   *y = HEIGHT;
@@ -28,6 +30,7 @@ void CNFGSetup(const char *window_name, int w, int h) {
   strncpy(global_window_name, window_name, 255);
 }
 
+static size_t test_num = 0;
 char key = '\0';
 void CNFGHandleInput() {
   if (key != '\0') {
@@ -35,12 +38,16 @@ void CNFGHandleInput() {
     key = '\0';
   }
 
-  printf("input required: \n");
-  fcntl(0, F_SETFL, O_NONBLOCK); // TODO: replace with bash calls
-  if (ngetc(&key) != 0) {
-    HandleKey(key, 0);
+  test_num++;
+  test_num %= 5;
+  if (test_num % 5 != 0) {
+    printf("input required: \n");
+    fcntl(0, F_SETFL, O_NONBLOCK); // TODO: replace with bash calls
+    if (ngetc(&key) != 0) {
+      HandleKey(key, 0);
+    }
+    fcntl(0, F_SETFL, 0);
   }
-  fcntl(0, F_SETFL, 0);
   // TODO: create some semblance of working in terminal
   // HandleKey(XLookupKeysym(&report.xkey, 0), bKeyDirection);
   // HandleButton(report.xbutton.x, report.xbutton.y, report.xbutton.button,

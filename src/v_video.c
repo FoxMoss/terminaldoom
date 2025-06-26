@@ -191,10 +191,7 @@ void V_DrawPatch(int x, int y, int scrn, patch_t *patch) {
   byte *dest;
   byte *source;
   int w;
-  printf("Patch at %d,%d \n", x, y);
 
-  printf("patch dump: offset (%i, %i) scale (%i, %i)\n", patch->leftoffset,
-         patch->topoffset, patch->width, patch->height);
   y -= SHORT(patch->topoffset);
   x -= SHORT(patch->leftoffset);
 #if defined(RANGECHECK)
@@ -217,8 +214,6 @@ void V_DrawPatch(int x, int y, int scrn, patch_t *patch) {
 
   for (; col < w; x += 1, col += 1, desttop += 1) {
     column = cast_as_column((byte *)patch + LONG(patch->columnofs[col]));
-    printf("%i: %i, %i\n", patch->columnofs[col], column->topdelta,
-           column->length);
 
     // step through the posts in a column
     size_t steps = 0;

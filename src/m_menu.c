@@ -1346,7 +1346,6 @@ void M_Drawer(void) {
   int start;
 
   inhelpscreens = false;
-  printf("a\n");
 
   // Horiz. & Vertically center string and print it.
   if (messageToPrint) {
@@ -1373,7 +1372,6 @@ void M_Drawer(void) {
     return;
   }
 
-  printf("b\n");
   if (!menuactive)
     return;
 

@@ -294,7 +294,6 @@ void R_GenerateLookup(int texnum) {
 // R_GetColumn
 //
 byte *R_GetColumn(int tex, int col) {
-  printf("getcol\n");
   int lump;
   int ofs;
 
