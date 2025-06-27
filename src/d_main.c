@@ -326,7 +326,6 @@ void D_DoomLoop(void) {
 
     // process one or more tics
     if (singletics) {
-      I_StartTic();
       D_ProcessEvents();
       G_BuildTiccmd(&netcmds[consoleplayer][maketic % BACKUPTICS]);
       if (advancedemo)

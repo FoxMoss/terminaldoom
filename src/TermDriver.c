@@ -1,6 +1,7 @@
 
 #include "DrawFunctions.h"
 
+#include "i_system.h"
 #include "math.c"
 #include <fcntl.h>
 #include <math.h>
@@ -75,6 +76,7 @@ void CNFGUpdateScreenWithBitmap(unsigned long *data, int w, int h) {
     }
     printf("\n");
   }
+  I_StartTic();
 }
 
 static uint32_t saved_color = 0;
